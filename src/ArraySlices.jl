@@ -6,12 +6,11 @@ export slices, columns, rows
 
 # Type parameters
 # 
-# F : a SubArray
-# N : ndims of the slices
+# F : type of SubArray
 # D : indexed dimension of the array
 # A : array type
 # 
-immutable SliceIterator{F, N, D, A<:AbstractArray} <: AbstractVector{F}
+immutable SliceIterator{F, D, A<:AbstractArray} <: AbstractVector{F}
     array::A
 end
 
@@ -19,7 +18,7 @@ end
     slices(array, dim)
 
 Return a `SliceIterator` object to loop over the slices of `array` along
-dimension `dim`.
+dimension `dim`. 
 
 """
 @generated function slices{T, N, D}(array::AbstractArray{T, N}, ::Type{Val{D}})
@@ -41,7 +40,7 @@ dimension `dim`.
     D == 1 ? push!(F.args, N) : push!(F.args, D)
 
     # build and return iterator
-    :(SliceIterator{$F, $N-1, $D, typeof(array)}(array))
+    :(SliceIterator{$F, $D, typeof(array)}(array))
 end
 
 # allow creating slices without the Val{d} business
@@ -51,17 +50,19 @@ slices(array::AbstractArray, d::Integer) = slices(array, Val{d})
 
 # ~~~ Array interface ~~~
 eltype{F}(s::SliceIterator{F}) = F
-length{F, N, D}(s::SliceIterator{F, N, D}) = size(s.array, D)
-size{F, N, D}(s::SliceIterator{F, N, D}) = (length(s), )
+length{F, D}(s::SliceIterator{F, D}) = size(s.array, D)
+size{F, D}(s::SliceIterator{F, D}) = (length(s), )
 
 # build code that produces slices with the correct indexing
-@generated function getindex{F, N, D}(s::SliceIterator{F, N, D}, i::Integer)
+@generated function getindex{F, D}(s::SliceIterator{F, D}, i::Integer)
+    # get size of parent array
+    N = s.parameters[1].parameters[3].parameters[2]
     expr = :()
-    expr.head = :call                        
+    expr.head = :call
     push!(expr.args, :slice)
     push!(expr.args, :(getfield(s, :array)))
     # fill in with `Colon`s
-    for i = 1:(N+1) 
+    for i = 1:N 
         push!(expr.args, Colon())
     end
     # then replace the indexed dimension
