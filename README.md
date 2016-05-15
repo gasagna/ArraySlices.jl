@@ -1,6 +1,6 @@
 # ArraySlices.jl
 
-This is a very simple package that enables looping over slices of an array in a natural way. Here is the typical example:
+This is a very simple Julia package that enables looping over slices of an array in a natural way. Here is a demo:
 
 ````julia
 # have some array
@@ -15,7 +15,7 @@ end
 
 ## Installation
 
-This package is not registered, hence installation follows the general procedure for julia code on a Github repository:
+This package is not registered, hence installation follows the general procedure for Julia code on a Github repository:
 ```julia
 Pkg.clone("https://github.com/gasagna/ArraySlices.jl.git")
 ```
@@ -51,7 +51,7 @@ for col in columns(X)
   # col is equal to a [1, 2] array
 end
 
-for (i, row) in rows(X)
+for (i, row) in enumerate(rows(X))
   # row is equal to a i*[1, 1] array
 end
 ````
@@ -59,10 +59,10 @@ end
 
 ## Why did you do this?
 I created this package because I frequently have to map functions working 
-in-place over some input and output dataorganised into arrays. For instance, 
-in the example below, I have a function `J!` that maps vectors to matrices, 
+in-place over some input and output data organised into arrays. For instance, 
+in the example below, the function `J!` maps vectors to matrices, 
 (e.g. the jacobian of a vector function). This package can be used to apply `J!`
-to alleach column of `X`, storing the output in the corresponding slices of 
+to each column of `X`, storing the output in the corresponding slices of 
 the preallocated `Y` array. 
 
 ````julia
