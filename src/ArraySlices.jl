@@ -5,30 +5,30 @@ import Base: start, next, done, length, size, eltype
 export slices, columns, rows
 
 #=
-# T : eltype
-# N : dimension of slice
+# T : data eltype
+# N : dimension of slices
 # D : indexed dimension
 # P : parent array
 =#
-immutable Slices{T, N, D, P<:AbstractArray}
+immutable SliceIterator{T, N, D, P<:AbstractArray}
     parent::P
-    function Slices(parent::AbstractArray{T}, d::Integer)
+    function SliceIterator(parent::AbstractArray{T}, d::Integer)
         1 <= d <= ndims(parent) || error("invalid slice dimension")
         new(parent)
     end
 end
 slices{T, N}(parent::AbstractArray{T, N}, d::Integer) = 
-    Slices{T, N-1, d, typeof(parent)}(parent, d)
+    SliceIterator{T, N-1, d, typeof(parent)}(parent, d)
 
-length{T, N, D}(s::Slices{T, N, D}) = size(s.parent, D)
-size{T, N, D}(s::Slices{T, N, D}) = (size(s.parent, D), )
+length{T, N, D}(s::SliceIterator{T, N, D}) = size(s.parent, D)
+size{T, N, D}(s::SliceIterator{T, N, D}) = (size(s.parent, D), )
 
 # Iteration interface
-start(s::Slices) = 1
-done{T, N, D}(s::Slices{T, N, D}, state) = (state == size(s.parent, D)+1)
+start(s::SliceIterator) = 1
+done{T, N, D}(s::SliceIterator{T, N, D}, state) = (state == size(s.parent, D)+1)
 
 # Build code that produces slices with the correct indexing
-@generated function next{T, N, D}(s::Slices{T, N, D}, state)
+@generated function next{T, N, D}(s::SliceIterator{T, N, D}, state)
     # index over columns of a matrix -> slice(s.parent, :, state)
     # index over rows    of a matrix -> slice(s.parent, state, :)
     expr = :()
@@ -42,7 +42,7 @@ done{T, N, D}(s::Slices{T, N, D}, state) = (state == size(s.parent, D)+1)
     :($expr, state + 1)
 end
 
-@generated function eltype{T, N, D}(s::Slices{T, N, D})
+@generated function eltype{T, N, D}(s::SliceIterator{T, N, D})
     # :(SubArray{T, N, Array{T, N+1}, NTuple{N+1, Union{Int, Colon}}}, LD})
     expr = :()
     expr.head = :curly
@@ -62,7 +62,7 @@ end
     expr
 end
 
-# code for 2D arrays
+# convenience functions for 2D arrays
 columns(parent::AbstractMatrix) = slices(parent, 2)
 rows(parent::AbstractMatrix) = slices(parent, 1)
 
