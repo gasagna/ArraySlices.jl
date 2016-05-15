@@ -18,6 +18,15 @@ let
     end
 end
 
+# constructor checks for indexed dimension
+let 
+    for nd = 2:5
+        X = randn(rand(1:10, nd)...)
+        @test_throws ErrorException slices(X, 0)
+        @test_throws ErrorException slices(X, nd+1)
+    end
+end
+
 # check length and size
 let 
     X = randn(1, 2, 3, 4, 5, 6)
