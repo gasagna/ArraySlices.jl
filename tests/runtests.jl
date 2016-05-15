@@ -1,7 +1,7 @@
 using Base.Test
 using ArraySlices
 
-# check values
+# check iteration and values
 let 
     X = [1  2  3; 
          4  8 12; 
@@ -16,6 +16,15 @@ let
     for (c1, c2) in zip(columns(X), rows(X'))
         @test c1 == c2
     end
+end
+
+# check getindexing
+let 
+    X = [1  2  3; 
+         4  8 12; 
+         9 18 27]
+    cols = columns(X)
+    @test cols[1] == [1, 4, 9]
 end
 
 # constructor checks for indexed dimension
