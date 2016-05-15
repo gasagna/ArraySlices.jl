@@ -67,7 +67,7 @@ column of `X`, storing the output in the corresponding slices of the preallocate
 
 ````julia
 # some function that maps a 1-dimension vector to an 2-dimension one
-J!(y::AbstractArray{T, 2}, x::AbstractArray{T, 1}) = # blah blah
+J!{T}(y::AbstractArray{T, 2}, x::AbstractArray{T, 1}) = # blah blah
 
 # some input data, i.e. fifty vectors of length 10
 X = randn(10, 50)
