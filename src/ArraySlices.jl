@@ -55,7 +55,7 @@ size{F, D}(s::SliceIterator{F, D}) = (length(s), )
 
 # build code that produces slices with the correct indexing
 @generated function getindex{F, D}(s::SliceIterator{F, D}, i::Integer)
-    # get size of parent array
+    # get ndims of parent array
     N = s.parameters[1].parameters[3].parameters[2]
     expr = :()
     expr.head = :call
