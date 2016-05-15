@@ -52,7 +52,7 @@ slices(array::AbstractArray, d::Integer) = slices(array, Val{d})
 # ~~~ Array interface ~~~
 eltype{F}(s::SliceIterator{F}) = F
 length{F, N, D}(s::SliceIterator{F, N, D}) = size(s.array, D)
-size{F, N, D}(s::SliceIterator{F, N, D}) = (size(s.array, D), )
+size{F, N, D}(s::SliceIterator{F, N, D}) = (length(s), )
 
 # build code that produces slices with the correct indexing
 @generated function getindex{F, N, D}(s::SliceIterator{F, N, D}, i::Integer)
