@@ -58,24 +58,24 @@ end
 
 
 ## Why did you do this?
-I created this package because I frequently have to map some function working 
-in-place over some input and output data that is organised into big arrays. For
-instance, in the example below I have some function `J!` that maps vectors to matrices, 
-(e.g. a the jacobianof some vector function), and I want to apply it to every 
-column of `X`, storing the output in the corresponding slices of the preallocated
-`Y` array. 
+I created this package because I frequently have to map functions working 
+in-place over some input and output dataorganised into arrays. For instance, 
+in the example below, I have a function `J!` that maps vectors to matrices, 
+(e.g. the jacobian of a vector function). This package can be used to apply `J!`
+to alleach column of `X`, storing the output in the corresponding slices of 
+the preallocated `Y` array. 
 
 ````julia
-# some function that maps a 1-dimension vector to an 2-dimension one
+# map a 1-dimension array to a 2-dimension array
 J!{T}(y::AbstractArray{T, 2}, x::AbstractArray{T, 1}) = # blah blah
 
-# some input data, i.e. fifty vectors of length 10
+# input data, i.e. fifty vectors of length 10
 X = randn(10, 50)
 
 # output is preallocated, fifty 10x10 matrices
 Y = Array{Float64}(10, 10, 50) 
 
-# apply f! to each slice - uses foreach!, available in v0.5 only
+# apply f! to each slice - (uses foreach!, available in v0.5 only)
 foreach(J!, slices(Y, 3), slices(X, 2))
 ````
 
