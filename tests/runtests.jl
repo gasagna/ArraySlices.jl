@@ -36,7 +36,7 @@ let
     end
 end
 
-# eltype should match that of builtin slice function
+# eltype should match that of built in slice function
 let 
     X = randn(5, 5, 5, 5, 5)
     @test typeof(slice(X, 1, :, :, :, :)) == eltype(slices(X, 1))
