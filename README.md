@@ -15,7 +15,7 @@ end
 
 ## Installation
 
-This package is not registered, hence installation follows the general procedure for Julia code on a Github repository:
+This package is not registered, hence installation follows the general procedure for Julia code on a git repository:
 ```julia
 Pkg.clone("https://github.com/gasagna/ArraySlices.jl.git")
 ```
