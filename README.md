@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/gasagna/ArraySlices.jl.svg?branch=master)](https://travis-ci.org/gasagna/ArraySlices.jl)
+
 # ArraySlices.jl
 
 This is a very simple Julia package that enables looping over slices of an array in a natural way. Here is a demo:
