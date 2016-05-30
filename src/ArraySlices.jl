@@ -37,8 +37,8 @@ dimension `dim`.
     tupexpr.args[1+D] = Int
     push!(F.args, tupexpr)
     
-    # add LD parameter
-    D == 1 ? push!(F.args, N) : push!(F.args, D)
+    # add L parameter
+    D == 1 || D == N ? push!(F.args, true) : push!(F.args, false)
 
     # build and return iterator
     :(SliceIterator{$F, $D, typeof(array)}(array))
