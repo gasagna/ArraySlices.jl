@@ -1,7 +1,7 @@
 __precompile__()
 module ArraySlices
 
-import Base: start, next, done, length, size, eltype, getindex
+import Base: length, size, eltype, getindex
 
 export slices, columns, rows
 
