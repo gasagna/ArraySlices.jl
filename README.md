@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/gasagna/ArraySlices.jl.svg?branch=master)](https://travis-ci.org/gasagna/ArraySlices.jl)
+[![ArraySlices.jl](http://pkg.julialang.org/badges/Example_0.5.svg)](http://pkg.julialang.org/?pkg=Example&ver=0.5)
 
 # ArraySlices.jl
 
