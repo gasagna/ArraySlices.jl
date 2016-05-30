@@ -1,3 +1,4 @@
+__precompile__()
 module ArraySlices
 
 import Base: start, next, done, length, size, eltype, getindex
