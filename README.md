@@ -15,8 +15,6 @@ for col in columns(x)
 end
 ```
 
-Currently, this works with the development branch of Julia.
-
 ## Installation
 
 This package is not registered, hence installation follows the general procedure for Julia code on a git repository:

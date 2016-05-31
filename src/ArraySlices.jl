@@ -15,6 +15,13 @@ immutable SliceIterator{F, D, A<:AbstractArray} <: AbstractVector{F}
     array::A
 end
 
+# ensure compatibility between versions
+if VERSION < v"0.5-dev"
+    _get_L(D, N) = D == 1 ? N : D
+else
+    _get_L(D, N) = D == 1 || D == N ? true : false
+end
+
 """
     slices(array, dim)
 
@@ -37,8 +44,8 @@ dimension `dim`.
     tupexpr.args[1+D] = Int
     push!(F.args, tupexpr)
     
-    # add L parameter
-    D == 1 || D == N ? push!(F.args, true) : push!(F.args, false)
+    # add L/LD parameter
+    push!(F.args, _get_L(D, N))
 
     # build and return iterator
     :(SliceIterator{$F, $D, typeof(array)}(array))
