@@ -52,11 +52,6 @@ dimension `dim`.
     :(SliceIterator{$F, $D, $array}(array))
 end
 
-# allow creating slices without the Val{d} business
-slices(array::AbstractArray, d::Integer) = slices(array, Val{d})
-
-
-
 # ~~~ Array interface ~~~
 eltype{F}(s::SliceIterator{F}) = F
 length{F, D}(s::SliceIterator{F, D}) = size(s.array, D)

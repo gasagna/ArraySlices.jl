@@ -31,8 +31,8 @@ end
 let 
     for nd = 2:5
         X = randn(rand(1:10, nd)...)
-        @test_throws ErrorException slices(X, 0)
-        @test_throws ErrorException slices(X, nd+1)
+        @test_throws ErrorException slices(X, Val{0})
+        @test_throws ErrorException slices(X, Val{nd+1})
     end
 end
 
@@ -40,17 +40,17 @@ end
 let 
     X = randn(1, 2, 3, 4, 5, 6)
     for i = 1:ndims(X)
-        @test length(slices(X, i)) == i
-        @test size(slices(X, i)) == (i, )
+        @test length(slices(X, Val{i})) == i
+        @test size(slices(X, Val{i})) == (i, )
     end
 end
 
 # eltype should match that of built in slice function
 let 
     X = randn(5, 5, 5, 5, 5)
-    @test typeof(slice(X, 1, :, :, :, :)) == eltype(slices(X, 1))
-    @test typeof(slice(X, :, 1, :, :, :)) == eltype(slices(X, 2))
-    @test typeof(slice(X, :, :, 1, :, :)) == eltype(slices(X, 3))
-    @test typeof(slice(X, :, :, :, 1, :)) == eltype(slices(X, 4))
-    @test typeof(slice(X, :, :, :, :, 1)) == eltype(slices(X, 5))
+    @test typeof(slice(X, 1, :, :, :, :)) == eltype(slices(X, Val{1}))
+    @test typeof(slice(X, :, 1, :, :, :)) == eltype(slices(X, Val{2}))
+    @test typeof(slice(X, :, :, 1, :, :)) == eltype(slices(X, Val{3}))
+    @test typeof(slice(X, :, :, :, 1, :)) == eltype(slices(X, Val{4}))
+    @test typeof(slice(X, :, :, :, :, 1)) == eltype(slices(X, Val{5}))
 end
