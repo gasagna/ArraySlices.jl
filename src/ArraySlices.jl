@@ -32,23 +32,24 @@ dimension `dim`.
 @generated function slices{T, N, D}(array::AbstractArray{T, N}, ::Type{Val{D}})
     # checks
     1 <= D <= N || error("invalid slice dimension")
-    
+
     # construct incomplete type of slice, then fill
-    F = :(SubArray{$T, $N-1, typeof(array)})
+    # example: SubArray{Float64, 1, Array{Float64,2}, Tuple{Int64, Colon}, true}
+    F = :(SubArray{$T, $(N-1), $array})
     
     # construct tuple of indices
     tupexpr = :(Tuple{})
     for i = 1:N 
         push!(tupexpr.args, :Colon)
     end
-    tupexpr.args[1+D] = Int
+    tupexpr.args[1+D] = :Int
     push!(F.args, tupexpr)
     
     # add L/LD parameter
     push!(F.args, _get_L(D, N))
 
     # build and return iterator
-    :(SliceIterator{$F, $D, typeof(array)}(array))
+    :(SliceIterator{$F, $D, $array}(array))
 end
 
 # allow creating slices without the Val{d} business
