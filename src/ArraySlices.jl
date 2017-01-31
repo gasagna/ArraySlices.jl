@@ -63,7 +63,7 @@ size(s::SliceIterator) = (length(s), )
     N = s.parameters[1].parameters[3].parameters[2]
     expr = :()
     expr.head = :call
-    push!(expr.args, :slice)
+    push!(expr.args, :view)
     push!(expr.args, :(getfield(s, :array)))
     # fill in with `Colon`s
     for i = 1:N 

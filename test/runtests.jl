@@ -48,9 +48,9 @@ end
 # eltype should match that of built in slice function
 let 
     X = randn(5, 5, 5, 5, 5)
-    @test typeof(slice(X, 1, :, :, :, :)) == eltype(slices(X, Val{1}))
-    @test typeof(slice(X, :, 1, :, :, :)) == eltype(slices(X, Val{2}))
-    @test typeof(slice(X, :, :, 1, :, :)) == eltype(slices(X, Val{3}))
-    @test typeof(slice(X, :, :, :, 1, :)) == eltype(slices(X, Val{4}))
-    @test typeof(slice(X, :, :, :, :, 1)) == eltype(slices(X, Val{5}))
+    @test typeof(view(X, 1, :, :, :, :)) == eltype(slices(X, Val{1}))
+    @test typeof(view(X, :, 1, :, :, :)) == eltype(slices(X, Val{2}))
+    @test typeof(view(X, :, :, 1, :, :)) == eltype(slices(X, Val{3}))
+    @test typeof(view(X, :, :, :, 1, :)) == eltype(slices(X, Val{4}))
+    @test typeof(view(X, :, :, :, :, 1)) == eltype(slices(X, Val{5}))
 end
