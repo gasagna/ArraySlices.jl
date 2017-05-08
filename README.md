@@ -2,9 +2,11 @@
 
 # ArraySlices.jl
 
-This is a very simple Julia package that enables looping over slices of an array in a natural way. Here is a demo:
+This is a simple Julia package that enables looping over slices of an array in a natural way. Here is a demo:
 
 ```julia
+using ArraySlices
+
 # have some array
 x = randn(10, 50)
 
@@ -50,11 +52,11 @@ X = [1 1;
      2 2]
 
 for col in columns(X)
-  # col is equal to a [1, 2] array
+  # col is equal to the array [1, 2]
 end
 
 for (i, row) in enumerate(rows(X))
-  # row is equal to a i*[1, 1] array
+  # row is equal to the array i*[1, 1]
 end
 ```
 
@@ -77,11 +79,6 @@ X = randn(10, 50)
 # output is preallocated, fifty 10x10 matrices
 Y = Array{Float64}(10, 10, 50) 
 
-# apply f! to each slice - (uses foreach!, available in v0.5 only)
+# apply J! to each slice - (uses foreach, available in v0.5 only)
 foreach(J!, slices(Y, Val{3}), slices(X, Val{2}))
 ```
-
-
-
-
-
