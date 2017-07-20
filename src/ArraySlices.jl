@@ -29,27 +29,20 @@ Return a `SliceIterator` object to loop over the slices of `array` along
 dimension `dim`. 
 
 """
-@generated function slices{T, N, D}(array::AbstractArray{T, N}, ::Type{Val{D}})
+function slices{T, N, D}(array::AbstractArray{T, N}, ::Type{Val{D}})
     # checks
     1 <= D <= N || error("invalid slice dimension")
 
-    # construct incomplete type of slice, then fill
+    # construct type of slice
     # example: SubArray{Float64, 1, Array{Float64,2}, Tuple{Int64, Colon}, true}
-    F = :(SubArray{$T, $(N-1), $array})
+    F = SubArray{T, 
+                 N-1, 
+                 typeof(array), 
+                 Tuple{[j == D ? Int : Colon for j = 1:N]...},
+                 _get_L(D, N)}
     
-    # construct tuple of indices
-    tupexpr = :(Tuple{})
-    for i = 1:N 
-        push!(tupexpr.args, :Colon)
-    end
-    tupexpr.args[1+D] = :Int
-    push!(F.args, tupexpr)
-    
-    # add L/LD parameter
-    push!(F.args, _get_L(D, N))
-
     # build and return iterator
-    :(SliceIterator{$F, $D, $array}(array))
+    SliceIterator{F, D, typeof(array)}(array)
 end
 
 # ~~~ Array interface ~~~
@@ -58,22 +51,10 @@ length{F, D}(s::SliceIterator{F, D}) = size(s.array, D)
 size(s::SliceIterator) = (length(s), )
 
 # build code that produces slices with the correct indexing
-@generated function getindex{F, D}(s::SliceIterator{F, D}, i::Integer)
-    # get ndims of parent array
-    N = s.parameters[1].parameters[3].parameters[2]
-    expr = :()
-    expr.head = :call
-    push!(expr.args, :view)
-    push!(expr.args, :(getfield(s, :array)))
-    # fill in with `Colon`s
-    for i = 1:N 
-        push!(expr.args, Colon())
-    end
-    # then replace the indexed dimension
-    expr.args[2 + D] = :i 
-    expr
+@generated function getindex{F, D, A}(s::SliceIterator{F, D, A}, i::Integer)
+    args = [j == D ? :(i) : :(Colon()) for j = 1:ndims(A)]
+    return :(view(s.array, $(args...)))
 end
-
 
 
 # ~~~ Convenience functions for 2D arrays ~~~
