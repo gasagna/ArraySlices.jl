@@ -82,3 +82,6 @@ Y = Array{Float64}(10, 10, 50)
 # apply J! to each slice - (uses foreach, available in v0.5 only)
 foreach(J!, slices(Y, Val{3}), slices(X, Val{2}))
 ```
+
+## Caveat
+This package currently only works with `Julia` version 0.5 or lower.
